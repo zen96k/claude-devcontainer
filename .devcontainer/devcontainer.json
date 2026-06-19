@@ -7,7 +7,7 @@
   },
   "init": true,
   "runArgs": ["--env-file", ".devcontainer/devcontainer.env", "--rm"],
-  "forwardPorts": [3000],
+  "forwardPorts": [3000, 4983],
   "mounts": [
     "source=${localWorkspaceFolder}/.claude,target=/home/vscode/.claude,type=bind"
   ],
