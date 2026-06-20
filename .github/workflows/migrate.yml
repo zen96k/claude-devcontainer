@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - sandbox/drizzle/**
+  workflow_dispatch:
 
 jobs:
   migrate:
