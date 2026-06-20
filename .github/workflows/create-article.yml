@@ -14,11 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: jdx/mise-action@v2
-
       - run: npm clean-install
-
       - run: npx tsx server/batch/create-article.ts
         env:
           DB_FILE_NAME: ${{ secrets.DB_FILE_NAME }}
