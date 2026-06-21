@@ -44,7 +44,9 @@
               {{ article.publisherName }}
             </UBadge>
             <span>{{ article.author }}</span>
-            <span>{{ formatDate(article.publishedAt) }}</span>
+            <ClientOnly>
+              <span>{{ formatDate(article.publishedAt) }}</span>
+            </ClientOnly>
           </div>
         </a>
       </li>
@@ -53,15 +55,12 @@
 </template>
 
 <script setup lang="ts">
+  import { format } from "@formkit/tempo"
+
   const { data: articles, status } = await useFetch("/api/article/fetch", {
     method: "POST",
     body: { orderBy: [{ column: "publishedAt", direction: "desc" }] }
   })
 
-  const formatDate = (date: string | Date) =>
-    new Date(date).toLocaleDateString("ja-JP", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    })
+  const formatDate = (date: string | Date) => format(new Date(date), "long")
 </script>
