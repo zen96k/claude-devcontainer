@@ -19,4 +19,4 @@ jobs:
       - run: npm clean-install
       - run: npx tsx server/batch/create-article.ts
         env:
-          DB_FILE_NAME: ${{ secrets.TURSO_DB_FILE_NAME }}
+          DB_FILE_NAME: ${{ secrets.DB_FILE_NAME }}
