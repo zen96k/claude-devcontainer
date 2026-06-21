@@ -26,6 +26,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - run: npx vercel build --prod -t ${{ secrets.VERCEL_TOKEN }}
         env:
+          DB_FILE_NAME: ${{ secrets.TURSO_DB_FILE_NAME }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_TEAM_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - run: npx vercel deploy --prebuilt --prod -t ${{ secrets.VERCEL_TOKEN }}
