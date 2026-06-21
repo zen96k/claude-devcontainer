@@ -9,7 +9,8 @@
   "runArgs": ["--env-file", ".devcontainer/devcontainer.env", "--rm"],
   "forwardPorts": [3000, 4983],
   "mounts": [
-    "source=${localWorkspaceFolder}/.claude,target=/home/vscode/.claude,type=bind"
+    "source=${localWorkspaceFolder}/.claude,target=/home/vscode/.claude,type=bind",
+    "source=${localWorkspaceFolder}/.codex,target=/home/vscode/.codex,type=bind"
   ],
   "customizations": {
     "vscode": {
@@ -19,13 +20,14 @@
         "eamodio.gitlens",
         "esbenp.prettier-vscode",
         "MS-CEINTL.vscode-language-pack-ja",
+        "openai.chatgpt",
         "vitest.explorer",
         "vscode-icons-team.vscode-icons",
         "Vue.volar"
       ]
     }
   },
-  "initializeCommand": "mkdir -p .claude",
+  "initializeCommand": "mkdir -p .claude .codex",
   "onCreateCommand": "bash .devcontainer/script/on_create_command.sh",
   "postStartCommand": "bash .devcontainer/script/post_start_command.sh",
   "postAttachCommand": "bash .devcontainer/script/post_attach_command.sh",

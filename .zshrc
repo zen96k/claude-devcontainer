@@ -104,3 +104,4 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 eval "$(mise activate zsh)"
+codex() { command "$(echo /home/vscode/.vscode-server/extensions/openai.chatgpt-*/bin/linux-*/codex | tr ' ' '\n' | sort -V | tail -1)" "$@"; }
