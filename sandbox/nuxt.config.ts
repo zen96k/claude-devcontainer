@@ -2,9 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
+  nitro: { preset: "vercel" },
   css: ["~/assets/css/main.css"],
-  modules: ["@nuxt/ui"],
-  nitro: {
-    preset: "vercel"
-  }
+  modules: ["@nuxt/ui"]
 })
