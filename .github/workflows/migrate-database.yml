@@ -1,15 +1,10 @@
 name: Migrate Database
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - sandbox/drizzle/**
   workflow_dispatch:
 
 jobs:
-  migrate:
+  migrate-database:
     runs-on: ubuntu-latest
     defaults:
       run:

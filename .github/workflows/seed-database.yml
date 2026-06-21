@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  seed:
+  seed-database:
     runs-on: ubuntu-latest
     defaults:
       run:
