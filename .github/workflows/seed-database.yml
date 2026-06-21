@@ -1,15 +1,10 @@
-name: Migrate
+name: Seed Database
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - sandbox/drizzle/**
   workflow_dispatch:
 
 jobs:
-  migrate:
+  seed:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -20,6 +15,6 @@ jobs:
         with:
           working_directory: sandbox
       - run: npm clean-install
-      - run: npx drizzle-kit migrate
+      - run: npx tsx server/db/seed/index.ts
         env:
           DB_FILE_NAME: ${{ secrets.DB_FILE_NAME }}

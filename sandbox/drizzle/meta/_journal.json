@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1781963716917,
+      "when": 1782056514148,
       "tag": "0000_initialize_database",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1781963716918,
-      "tag": "0001_update_publisher",
       "breakpoints": true
     }
   ]

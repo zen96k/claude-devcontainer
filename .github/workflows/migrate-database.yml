@@ -1,0 +1,25 @@
+name: Migrate Database
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - sandbox/drizzle/**
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          working_directory: sandbox
+      - run: npm clean-install
+      - run: npx drizzle-kit migrate
+        env:
+          DB_FILE_NAME: ${{ secrets.DB_FILE_NAME }}
