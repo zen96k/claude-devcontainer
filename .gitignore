@@ -1,6 +1,6 @@
+.claude.json
 .claude/*
 !.claude/settings.json
-.claude.json
 
 *.env
 !default.env
