@@ -76,8 +76,16 @@
 <script setup lang="ts">
   import { format } from "@formkit/tempo"
 
+  const route = useRoute()
+  const router = useRouter()
+  const page = ref(Number(route.query.page) || 1)
   const articleLimit = 10
-  const page = ref(1)
+
+  watch(page, (value) => {
+    router.replace({
+      query: { ...route.query, page: value === 1 ? undefined : value }
+    })
+  })
 
   const { data, status } = await useFetch("/api/article/fetch", {
     method: "POST",
