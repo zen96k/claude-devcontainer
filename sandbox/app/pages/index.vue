@@ -6,8 +6,8 @@
       class="flex justify-center py-12"
     >
       <UIcon
-        name="i-lucide-loader-circle"
         class="animate-spin text-4xl text-gray-400"
+        name="i-lucide-loader-circle"
       />
     </div>
     <div
@@ -43,8 +43,8 @@
         <div class="mb-4 flex justify-center">
           <UPagination
             v-model:page="page"
-            :total="total"
             :items-per-page="articleLimit"
+            :total="total"
           />
         </div>
         <ul class="space-y-4">
@@ -54,10 +54,10 @@
             class="hover:border-primary-400 rounded-lg border border-gray-200 p-4 transition-colors"
           >
             <a
-              :href="article.url"
-              target="_blank"
-              rel="noopener noreferrer"
               class="group block"
+              :href="article.url"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               <h2
                 class="group-hover:text-primary-500 mb-1 text-base font-semibold transition-colors"
@@ -84,8 +84,8 @@
         <div class="mt-8 flex justify-center">
           <UPagination
             v-model:page="page"
-            :total="total"
             :items-per-page="articleLimit"
+            :total="total"
           />
         </div>
       </template>
