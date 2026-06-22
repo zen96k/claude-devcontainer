@@ -23,6 +23,13 @@
       記事がありません
     </div>
     <template v-else>
+      <div class="mb-4 flex justify-center">
+        <UPagination
+          v-model:page="page"
+          :total="total"
+          :items-per-page="articleLimit"
+        />
+      </div>
       <ul class="space-y-4">
         <li
           v-for="article in articles"
@@ -69,8 +76,16 @@
 <script setup lang="ts">
   import { format } from "@formkit/tempo"
 
+  const route = useRoute()
+  const router = useRouter()
+  const page = ref(Number(route.query.page) || 1)
   const articleLimit = 10
-  const page = ref(1)
+
+  watch(page, (value) => {
+    router.replace({
+      query: { ...route.query, page: value === 1 ? undefined : value }
+    })
+  })
 
   const { data, status } = await useFetch("/api/article/fetch", {
     method: "POST",

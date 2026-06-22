@@ -9,8 +9,7 @@
   "runArgs": ["--env-file", ".devcontainer/devcontainer.env", "--rm"],
   "forwardPorts": [3000, 4983],
   "mounts": [
-    "source=${localWorkspaceFolder}/.claude,target=/home/vscode/.claude,type=bind",
-    "source=${localWorkspaceFolder}/.claude.json,target=/home/vscode/.claude.json,type=bind"
+    "source=${localWorkspaceFolder}/.claude,target=/home/vscode/.claude,type=bind"
   ],
   "remoteEnv": {
     "PATH": "/home/vscode/.local/share/mise/shims:${containerEnv:PATH}"
