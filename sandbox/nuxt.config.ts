@@ -4,5 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   nitro: { preset: "vercel" },
   css: ["~/assets/css/main.css"],
+  colorMode: { preference: "dark" },
   modules: ["@nuxt/ui"]
 })
