@@ -4,13 +4,13 @@ on:
   pull_request:
     paths:
       - sandbox/**
-      - .github/workflows/test.yml
+      - .github/workflows/test-application.yml
   push:
     branches:
       - main
     paths:
       - sandbox/**
-      - .github/workflows/test.yml
+      - .github/workflows/test-application.yml
   workflow_dispatch:
 
 permissions:

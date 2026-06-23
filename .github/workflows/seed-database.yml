@@ -3,6 +3,9 @@ name: Seed Database
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   seed-database:
     runs-on: ubuntu-latest

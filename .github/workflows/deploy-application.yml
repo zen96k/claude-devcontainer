@@ -6,7 +6,11 @@ on:
       - main
     paths:
       - sandbox/**
+      - .github/workflows/deploy-application.yml
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   migrate-database:

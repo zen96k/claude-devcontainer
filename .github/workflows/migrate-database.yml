@@ -3,6 +3,9 @@ name: Migrate Database
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   migrate-database:
     runs-on: ubuntu-latest
