@@ -17,22 +17,10 @@
       エラーが発生しました
     </div>
     <template v-else>
-      <div class="mb-4 flex flex-wrap gap-2">
-        <UButton
-          :variant="selectedPublisher === null ? 'solid' : 'ghost'"
-          @click="selectedPublisher = null"
-        >
-          全て
-        </UButton>
-        <UButton
-          v-for="p in publishers"
-          :key="p.id"
-          :variant="selectedPublisher === p.name ? 'solid' : 'ghost'"
-          @click="selectedPublisher = p.name"
-        >
-          {{ p.name }}
-        </UButton>
-      </div>
+      <ArticlePublisherFilter
+        v-model="selectedPublisher"
+        :publishers="publishers"
+      />
       <div
         v-if="!articles.length"
         class="py-12 text-center text-gray-500"
@@ -48,38 +36,12 @@
           />
         </div>
         <ul class="space-y-4">
-          <li
+          <ArticleCard
             v-for="article in articles"
             :key="article.id"
-            class="hover:border-primary-400 rounded-lg border border-gray-200 p-4 transition-colors"
-          >
-            <a
-              class="group block"
-              :href="article.url"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <h2
-                class="group-hover:text-primary-500 mb-1 text-base font-semibold transition-colors"
-              >
-                {{ article.title }}
-              </h2>
-              <div class="flex items-center gap-3 text-sm text-gray-500">
-                <span>
-                  From:
-                  <UBadge variant="soft">
-                    {{ article.publisherName }}
-                  </UBadge>
-                </span>
-                <span>Author: {{ article.author }}</span>
-                <ClientOnly>
-                  <span>
-                    Published At: {{ formatDate(article.publishedAt) }}
-                  </span>
-                </ClientOnly>
-              </div>
-            </a>
-          </li>
+            :article="article"
+            :format-date="formatDate"
+          />
         </ul>
         <div class="mt-8 flex justify-center">
           <UPagination
@@ -94,79 +56,14 @@
 </template>
 
 <script setup lang="ts">
-  import { format } from "@formkit/tempo"
-
-  const route = useRoute()
-  const router = useRouter()
-  const page = ref(Number(route.query.page) || 1)
-  const selectedPublisher = ref<string | null>(
-    (route.query.publisher as string) || null
-  )
-  const articleLimit = 10
-
-  watch(
-    () => {
-      return route.query.page
-    },
-    (value) => {
-      page.value = Number(value) || 1
-    }
-  )
-
-  watch(
-    () => {
-      return route.query.publisher
-    },
-    (value) => {
-      selectedPublisher.value = (value as string) || null
-    }
-  )
-
-  watch(page, (value) => {
-    router.replace({
-      query: {
-        page: value === 1 ? undefined : value,
-        publisher: selectedPublisher.value ?? undefined
-      }
-    })
-  })
-
-  watch(selectedPublisher, (value) => {
-    page.value = 1
-    router.replace({ query: { publisher: value ?? undefined } })
-  })
-
-  const { data, status } = await useFetch("/api/article/fetch", {
-    method: "POST",
-    body: computed(() => {
-      return {
-        orderBy: [{ column: "publishedAt", direction: "desc" }],
-        where: selectedPublisher.value
-          ? [
-              {
-                column: "publisherName",
-                operator: "eq",
-                value: selectedPublisher.value
-              }
-            ]
-          : undefined,
-        limit: articleLimit,
-        offset: (page.value - 1) * articleLimit
-      }
-    })
-  })
-
-  const articles = computed(() => {
-    return data.value?.articles ?? []
-  })
-  const total = computed(() => {
-    return data.value?.total ?? 0
-  })
-  const publishers = computed(() => {
-    return data.value?.publishers ?? []
-  })
-
-  const formatDate = (date: string | Date) => {
-    return format(new Date(date), "YYYY-MM-DD HH:mm:ss")
-  }
+  const {
+    articleLimit,
+    selectedPublisher,
+    page,
+    total,
+    articles,
+    publishers,
+    status,
+    formatDate
+  } = await useArticleList()
 </script>
