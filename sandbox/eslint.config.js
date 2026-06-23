@@ -5,10 +5,10 @@ const config = withNuxt([
   {
     languageOptions: { parserOptions: { projectService: true } },
     rules: {
-      "arrow-body-style": ["error", "always"],
-      curly: ["error", "all"],
       "@typescript-eslint/return-await": ["error", "always"],
-      "vue/attributes-order": ["warn", { alphabetical: true }]
+      "arrow-body-style": ["error", "always"],
+      curly: "error",
+      "vue/attributes-order": ["error", { alphabetical: true }]
     }
   }
 ]).append(eslintConfigPrettier)
