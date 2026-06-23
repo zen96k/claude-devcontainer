@@ -69,7 +69,9 @@ RSSフィード -> batch/create-article.ts -> SQLite/Turso
 
 ### フロントエンド (`app/`)
 
-`app/pages/article/index.vue` の 1 ページ構成です。`useFetch` で `POST /api/article/fetch` を呼び出し、publisher フィルターとページネーションをクエリストリングで管理します。
+`app/pages/index.vue` は `/article` へリダイレクトします。記事一覧は `app/pages/article/index.vue` で表示し、`app/composables/useArticleList.ts` が `useFetch` で `POST /api/article/fetch` を呼び出します。publisher フィルターとページネーションは URL クエリストリングと同期します。
+
+記事一覧の UI は `app/components/ArticleCard.vue` と `app/components/ArticlePublisherFilter.vue` に分割されています。
 
 ## テスト
 
@@ -77,8 +79,11 @@ RSSフィード -> batch/create-article.ts -> SQLite/Turso
 
 ## CI/CD
 
+- テスト: pull request または `main` への push で `npm run test` を実行
 - デプロイ: `main` への push -> DB マイグレーション -> Vercel へデプロイ
-- 記事取得: GitHub Actions の cron が 1 時間ごとに `create-article.ts` を本番 DB に対して実行
+- 本番デプロイ時のみ `.github/workflows/deploy-application.yml` の `vercel build --prod` で `NITRO_PRESET=vercel` を指定する。`nuxt.config.ts` には常時適用の `nitro.preset` を置かない
+- 記事取得: GitHub Actions の cron が 1 日 2 回（JST 06:00 / 18:00）`create-article.ts` を本番 DB に対して実行
+- DB シードと DB マイグレーションは手動実行用 workflow も用意されている
 
 ## 作業上の注意
 
