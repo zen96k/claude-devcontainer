@@ -10,6 +10,7 @@ const publishers = await db.select().from(publisher)
 const allItems = (
   await Promise.all(
     publishers.map(async (publisher) => {
+      console.log(`Fetching articles from ${publisher.name}...`)
       const feed = await parser.parseURL(publisher.url)
       const items = feed.items.flatMap((item) => {
         const title = item.title
@@ -18,6 +19,11 @@ const allItems = (
         const publishedAt = item.pubDate ? new Date(item.pubDate) : null
 
         if (!title || !url || !author || !publishedAt) {
+          console.warn(
+            `Skipping article from ${publisher.name} due to missing required fields: ${JSON.stringify(
+              item
+            )}`
+          )
           return []
         } else {
           return [
@@ -25,6 +31,7 @@ const allItems = (
           ]
         }
       })
+      console.log(`Fetched ${items.length} articles from ${publisher.name}.`)
 
       return items
     })
