@@ -4,10 +4,27 @@ export const useArticleList = async () => {
   const route = useRoute()
   const router = useRouter()
   const page = ref(Number(route.query.page) || 1)
+
   const selectedPublisher = ref<string | null>(
     (route.query.publisher as string) || null
   )
-  const articleLimit = 10
+
+  const articleLimit = ref(10)
+  const updateArticleLimit = ({ matches }: Pick<MediaQueryList, "matches">) => {
+    articleLimit.value = matches ? 15 : 10
+  }
+
+  let desktopMediaQuery: MediaQueryList | undefined
+
+  onMounted(() => {
+    desktopMediaQuery = window.matchMedia("(min-width: 1024px)")
+    updateArticleLimit(desktopMediaQuery)
+    desktopMediaQuery.addEventListener("change", updateArticleLimit)
+  })
+
+  onUnmounted(() => {
+    desktopMediaQuery?.removeEventListener("change", updateArticleLimit)
+  })
 
   watch(
     () => {
@@ -55,8 +72,8 @@ export const useArticleList = async () => {
               }
             ]
           : undefined,
-        limit: articleLimit,
-        offset: (page.value - 1) * articleLimit
+        limit: articleLimit.value,
+        offset: (page.value - 1) * articleLimit.value
       }
     })
   })

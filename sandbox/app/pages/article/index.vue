@@ -35,14 +35,14 @@
             :total="total"
           />
         </div>
-        <ul class="space-y-4">
+        <UPageGrid as="ul">
           <ArticleCard
             v-for="article in articles"
             :key="article.id"
             :article="article"
             :format-date="formatDate"
           />
-        </ul>
+        </UPageGrid>
         <div class="mt-8 flex justify-center">
           <UPagination
             v-model:page="page"
