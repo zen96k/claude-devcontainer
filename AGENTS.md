@@ -13,11 +13,23 @@
 ## コマンド
 
 ```bash
+# 依存関係のインストール
+npm clean-install
+
 # 開発サーバー起動 (http://localhost:3000)
 npm run dev
 
+# 本番ビルド
+npm run build
+
+# 本番ビルドのローカルプレビュー
+npm run preview
+
 # テスト全件実行
 npm test
+
+# テストの watch 実行
+npm run test:watch
 
 # 特定のテストファイルのみ実行
 npx vitest run test/unit/server/article/article.service.test.ts
@@ -37,7 +49,7 @@ npx drizzle-kit generate
 # publisherのシードデータ投入
 npx tsx server/db/seed/index.ts
 
-# RSSフィードから記事を取得してupsert（CIで1時間ごとに実行）
+# RSSフィードから記事を取得してupsert（CIで1日2回実行）
 npx tsx server/batch/create-article.ts
 ```
 
@@ -47,7 +59,7 @@ npx tsx server/batch/create-article.ts
 
 ## アーキテクチャ
 
-Nuxt 4 + Nitro アプリです。Vercel にデプロイされ、DB は SQLite（ローカル）/ Turso（本番）を Drizzle ORM 経由で利用します。
+Nuxt 4 + Nitro アプリです。UI は Nuxt UI と Tailwind CSS v4 を使います。Vercel にデプロイされ、DB は SQLite（ローカル）/ Turso（本番）を Drizzle ORM 経由で利用します。
 
 ### データフロー
 
@@ -69,9 +81,9 @@ RSSフィード -> batch/create-article.ts -> SQLite/Turso
 
 ### フロントエンド (`app/`)
 
-`app/pages/index.vue` は `/article` へリダイレクトします。記事一覧は `app/pages/article/index.vue` で表示し、`app/composables/useArticleList.ts` が `useFetch` で `POST /api/article/fetch` を呼び出します。publisher フィルターとページネーションは URL クエリストリングと同期します。
+`app/pages/index.vue` は `/article` へリダイレクトします。記事一覧は `app/pages/article/index.vue` で表示し、`app/composables/useArticles.ts` が `useFetch` で `POST /api/article/fetch` を呼び出します。publisher フィルターとページネーションは URL クエリストリングと同期します。
 
-記事一覧の UI は `app/components/ArticleCard.vue` と `app/components/ArticlePublisherFilter.vue` に分割されています。
+記事一覧の UI は `app/components/article/ArticleCard.vue` と `app/components/article/ArticlePublisherFilter.vue` に分割されています。ページサイズは VueUse の breakpoint で desktop 15 件、mobile 10 件に切り替えます。
 
 ## テスト
 
@@ -79,8 +91,8 @@ RSSフィード -> batch/create-article.ts -> SQLite/Turso
 
 ## CI/CD
 
-- テスト: pull request または `main` への push で `npm run test` を実行
-- デプロイ: `main` への push -> DB マイグレーション -> Vercel へデプロイ
+- テスト: `sandbox/**` または `.github/workflows/test-application.yml` への pull request / `main` push / 手動実行で `npm run test` を実行
+- デプロイ: `sandbox/**` または `.github/workflows/deploy-application.yml` への `main` push / 手動実行で DB マイグレーション後に Vercel へデプロイ
 - 本番デプロイ時のみ `.github/workflows/deploy-application.yml` の `vercel build --prod` で `NITRO_PRESET=vercel` を指定する。`nuxt.config.ts` には常時適用の `nitro.preset` を置かない
 - 記事取得: GitHub Actions の cron が 1 日 2 回（JST 06:00 / 18:00）`create-article.ts` を本番 DB に対して実行
 - DB シードと DB マイグレーションは手動実行用 workflow も用意されている
@@ -91,4 +103,5 @@ RSSフィード -> batch/create-article.ts -> SQLite/Turso
 - DB スキーマ変更時は Drizzle のマイグレーションを生成し、関連テストを更新してください。
 - フロントエンドの状態は URL クエリと同期する既存方針に合わせてください。
 - ユーザーや他エージェントの未コミット変更を勝手に戻さないでください。
-- Codex がコミットを作成する場合は、コミットメッセージ末尾に `Co-authored-by: Codex <codex@openai.com>` を付けてください。
+- AI コーディングエージェントがコミットを作成する場合は、コミットメッセージを日本語で書いてください。
+- AI コーディングエージェントがコミットを作成する場合は、コミットメッセージ末尾に利用したエージェント名とメールアドレスの `Co-authored-by` trailer を付けてください。
