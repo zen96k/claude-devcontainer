@@ -58,6 +58,19 @@
 <script setup lang="ts">
   import { breakpointsTailwind } from "@vueuse/core"
 
+  const requestUrl = useRequestURL()
+
+  useSeoMeta({
+    title: "Sandbox | 記事一覧",
+    description: "Qiita/Zennの個人用RSSリーダー",
+    ogTitle: "Sandbox | 記事一覧",
+    ogDescription: "Qiita/Zennの個人用RSSリーダー",
+    ogType: "website",
+    ogUrl: `${requestUrl.origin}/article`,
+    ogImage: `${requestUrl.origin}/ogp.png`,
+    twitterCard: "summary_large_image"
+  })
+
   const breakpoints = useBreakpoints(breakpointsTailwind, { ssrWidth: 768 })
   const isDesktop = breakpoints.greaterOrEqual("lg")
   const articleLimit = computed(() => {
