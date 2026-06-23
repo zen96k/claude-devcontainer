@@ -33,9 +33,9 @@ export type GetArticlesOption = {
   offset?: number
 }
 
-const buildWhereSQL = ({ conditions }: { conditions?: WhereCondition[] } = {}):
-  | SQL
-  | undefined => {
+export const buildWhereSQL = ({
+  conditions
+}: { conditions?: WhereCondition[] } = {}): SQL | undefined => {
   const expressions = conditions
     ?.filter(({ column }) => {
       return column in filterableColumns
@@ -55,6 +55,24 @@ const buildWhereSQL = ({ conditions }: { conditions?: WhereCondition[] } = {}):
   }
 }
 
+export const buildOrderSQL = (
+  orderBy: GetArticlesOption["orderBy"]
+): SQL[] | undefined => {
+  const expressions = orderBy
+    ?.filter(({ column }) => {
+      return column in orderableColumns
+    })
+    .map(({ column, direction }) => {
+      const col = orderableColumns[column as OrderableColumn]
+      if (direction === "desc") {
+        return desc(col)
+      }
+      return asc(col)
+    })
+
+  return expressions?.length ? expressions : undefined
+}
+
 export const generateArticleService = (repository: ArticleRepository) => {
   const service = {
     readArticles: async ({
@@ -63,21 +81,7 @@ export const generateArticleService = (repository: ArticleRepository) => {
       limit,
       offset
     }: GetArticlesOption = {}): Promise<Article[]> => {
-      const orderExpressions = orderBy?.map(({ column, direction }) => {
-        const designatedColumn =
-          column in orderableColumns
-            ? orderableColumns[column as OrderableColumn]
-            : article.id
-
-        switch (direction) {
-          case "asc":
-            return asc(designatedColumn)
-          case "desc":
-            return desc(designatedColumn)
-          default:
-            return asc(designatedColumn)
-        }
-      })
+      const orderExpressions = buildOrderSQL(orderBy)
 
       return await repository.readArticles({
         where: buildWhereSQL({ conditions: where }),
