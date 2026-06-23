@@ -4,5 +4,5 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   nitro: { preset: "vercel" },
   css: ["~/assets/css/main.css"],
-  modules: ["@nuxt/eslint", "@nuxt/ui"]
+  modules: ["@nuxt/eslint", "@nuxt/ui", "@nuxt/test-utils/module"]
 })
