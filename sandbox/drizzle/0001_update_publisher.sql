@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `publisher_name_unique` ON `publisher` (`name`);
