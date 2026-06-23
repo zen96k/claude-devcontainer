@@ -37,7 +37,9 @@ const buildWhereSQL = ({ conditions }: { conditions?: WhereCondition[] } = {}):
   | SQL
   | undefined => {
   const expressions = conditions
-    ?.filter(({ column }) => column in filterableColumns)
+    ?.filter(({ column }) => {
+      return column in filterableColumns
+    })
     .map(({ column, operator, value }) => {
       const col = filterableColumns[column as FilterableColumn]
       switch (operator) {
