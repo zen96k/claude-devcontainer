@@ -11,7 +11,7 @@ describe("generateArticleService", () => {
       countArticles: vi.fn(),
       readPublishers: vi.fn()
     }
-    const service = generateArticleService(repository)
+    const service = generateArticleService({ repository })
 
     await service.readArticles({ limit: 10, offset: 20 })
 
@@ -26,7 +26,7 @@ describe("generateArticleService", () => {
       countArticles: vi.fn().mockResolvedValue(3),
       readPublishers: vi.fn()
     }
-    const service = generateArticleService(repository)
+    const service = generateArticleService({ repository })
 
     await expect(service.countArticles({})).resolves.toBe(3)
   })
@@ -37,7 +37,7 @@ describe("generateArticleService", () => {
       countArticles: vi.fn(),
       readPublishers: vi.fn().mockResolvedValue(publishers)
     }
-    const service = generateArticleService(repository)
+    const service = generateArticleService({ repository })
 
     await expect(service.readPublishers()).resolves.toEqual(publishers)
   })

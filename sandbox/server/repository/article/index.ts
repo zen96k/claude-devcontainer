@@ -21,9 +21,11 @@ export type ReadOption = {
   offset?: number
 }
 
-export const generateArticleRepository = (
+export const generateArticleRepository = ({
+  db
+}: {
   db: LibSQLDatabase<typeof schema>
-) => {
+}) => {
   return {
     readArticles: async ({
       where,

@@ -19,7 +19,11 @@ export type ArticleRepository = {
   readPublishers(): Promise<Publisher[]>
 }
 
-export const generateArticleService = (repository: ArticleRepository) => {
+export const generateArticleService = ({
+  repository
+}: {
+  repository: ArticleRepository
+}) => {
   return {
     readArticles: async ({
       where,
@@ -29,7 +33,7 @@ export const generateArticleService = (repository: ArticleRepository) => {
     }: GetArticlesOption = {}): Promise<Article[]> => {
       return await repository.readArticles({
         where: buildWhereSQL({ conditions: where }),
-        orderBy: buildOrderSQL(orderBy),
+        orderBy: buildOrderSQL({ orderBy }),
         limit,
         offset
       })

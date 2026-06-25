@@ -45,42 +45,46 @@ describe("buildWhereSQL", () => {
 
 describe("buildOrderSQL", () => {
   test("orderByが指定されていない場合はundefinedを返す", () => {
-    expect(buildOrderSQL(undefined)).toBeUndefined()
+    expect(buildOrderSQL({})).toBeUndefined()
   })
 
   test("サポートされていないカラムの場合はundefinedを返す", () => {
     expect(
-      buildOrderSQL([{ column: "unknown", direction: "asc" }])
+      buildOrderSQL({ orderBy: [{ column: "unknown", direction: "asc" }] })
     ).toBeUndefined()
   })
 
   test("サポートされているカラムのasc式を生成する", () => {
     expect(
-      buildOrderSQL([{ column: "publishedAt", direction: "asc" }])
+      buildOrderSQL({ orderBy: [{ column: "publishedAt", direction: "asc" }] })
     ).toEqual([asc(article.publishedAt)])
   })
 
   test("サポートされているカラムのdesc式を生成する", () => {
     expect(
-      buildOrderSQL([{ column: "publishedAt", direction: "desc" }])
+      buildOrderSQL({ orderBy: [{ column: "publishedAt", direction: "desc" }] })
     ).toEqual([desc(article.publishedAt)])
   })
 
   test("複数のorder式を生成する", () => {
     expect(
-      buildOrderSQL([
-        { column: "publishedAt", direction: "desc" },
-        { column: "title", direction: "asc" }
-      ])
+      buildOrderSQL({
+        orderBy: [
+          { column: "publishedAt", direction: "desc" },
+          { column: "title", direction: "asc" }
+        ]
+      })
     ).toEqual([desc(article.publishedAt), asc(article.title)])
   })
 
   test("サポートされていないカラムを無視してサポートされているカラムのみ使用する", () => {
     expect(
-      buildOrderSQL([
-        { column: "unknown", direction: "asc" },
-        { column: "publishedAt", direction: "desc" }
-      ])
+      buildOrderSQL({
+        orderBy: [
+          { column: "unknown", direction: "asc" },
+          { column: "publishedAt", direction: "desc" }
+        ]
+      })
     ).toEqual([desc(article.publishedAt)])
   })
 })
