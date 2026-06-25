@@ -1,3 +1,4 @@
+import { handleApiError } from "../../utils/handleApiError"
 import { db } from "../../db"
 import { generateArticleRepository } from "../../repository/article"
 import { generateArticleService } from "../../service/article"
@@ -17,16 +18,6 @@ export default defineEventHandler(async (event) => {
 
     return { articles, total, publishers }
   } catch (error) {
-    if (isError(error) && error.statusCode === 422) {
-      throw createError({
-        statusCode: 422,
-        message: "リクエストの形式が正しくありません"
-      })
-    }
-    throw createError({
-      statusCode: 500,
-      message: "記事を取得できませんでした",
-      cause: error
-    })
+    handleApiError(error, "記事を取得できませんでした")
   }
 })
