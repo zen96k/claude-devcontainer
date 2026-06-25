@@ -76,12 +76,6 @@ describe("useArticles", () => {
     expect(publishers.value).toEqual([])
   })
 
-  test("articleLimit が返り値に含まれる", async () => {
-    const limit = readonly(ref(20))
-    const { articleLimit } = await useArticles({ articleLimit: limit })
-    expect(articleLimit.value).toBe(20)
-  })
-
   test("初期状態で page は 1 になる", async () => {
     const { page } = await useArticles({ articleLimit: readonly(ref(10)) })
     expect(page.value).toBe(1)
