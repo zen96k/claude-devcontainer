@@ -76,7 +76,6 @@ export const useArticles = async ({
   })
 
   return {
-    articleLimit,
     selectedPublisher,
     page,
     total,

@@ -1,13 +1,14 @@
-import { articleRepository } from "../../repository/article.repository"
-import {
-  generateArticleService,
-  type GetArticlesOption
-} from "../../service/article/service"
+import { db } from "../../db"
+import { generateArticleRepository } from "../../repository/article"
+import { generateArticleService } from "../../service/article"
+import { bodySchema } from "./schema/body-schema"
 
-const articleService = generateArticleService(articleRepository)
+const articleService = generateArticleService({
+  repository: generateArticleRepository({ db })
+})
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<GetArticlesOption>(event)
+  const body = await readValidatedBody(event, bodySchema.parse)
 
   try {
     const [articles, total, publishers] = await Promise.all([
@@ -17,7 +18,7 @@ export default defineEventHandler(async (event) => {
     ])
 
     return { articles, total, publishers }
-  } catch {
-    throw createError({ statusCode: 500, message: "記事の取得に失敗しました" })
+  } catch (error) {
+    throw createError({ statusCode: 500, cause: error })
   }
 })

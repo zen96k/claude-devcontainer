@@ -14,7 +14,7 @@
       v-else-if="status === 'error'"
       class="py-12 text-center text-gray-500"
     >
-      エラーが発生しました
+      記事を取得できませんでした
     </div>
     <template v-else>
       <ArticlePublisherFilter
@@ -40,7 +40,6 @@
             v-for="article in articles"
             :key="article.id"
             :article="article"
-            :format-date="formatDate"
           />
         </UPageGrid>
         <div class="mt-8 flex justify-center">

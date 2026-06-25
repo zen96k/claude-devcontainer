@@ -41,9 +41,9 @@ export const buildWhereSQL = ({
   }
 }
 
-export const buildOrderSQL = (
-  orderBy?: GetArticlesOption["orderBy"]
-): SQL[] | undefined => {
+export const buildOrderSQL = ({
+  orderBy
+}: { orderBy?: GetArticlesOption["orderBy"] } = {}): SQL[] | undefined => {
   const expressions = orderBy
     ?.filter(({ column }) => {
       return column in orderableColumns

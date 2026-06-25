@@ -22,7 +22,7 @@
         </span>
         <span>Author: {{ article.author }}</span>
         <ClientOnly>
-          <span>Published At: {{ formatDate(article.publishedAt) }}</span>
+          <span>Published At: {{ formatDate({ date: article.publishedAt }) }}</span>
         </ClientOnly>
       </div>
     </a>
@@ -30,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+  import { formatDate } from "~/utils/formatDate"
+
   defineProps<{
     article: {
       id: string | number
@@ -39,6 +41,5 @@
       author: string
       publishedAt: string | Date
     }
-    formatDate: (date: string | Date) => string
   }>()
 </script>
