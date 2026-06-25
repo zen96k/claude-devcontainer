@@ -1,12 +1,12 @@
 import { asc, desc, eq } from "drizzle-orm"
 import { describe, expect, test, vi } from "vitest"
-import { article, publisher } from "../../../../server/db/schema"
-import type { Publisher } from "../../../../server/repository/article.repository"
+import { article, publisher } from "../../../../../server/db/schema"
+import type { Publisher } from "../../../../../server/repository/article.repository"
 import {
   buildOrderSQL,
   buildWhereSQL
-} from "../../../../server/service/article/query-builder"
-import { generateArticleService } from "../../../../server/service/article/service"
+} from "../../../../../server/service/article/query-builder"
+import { generateArticleService } from "../../../../../server/service/article/service"
 
 describe("buildWhereSQL", () => {
   test("returns undefined when no conditions given", () => {

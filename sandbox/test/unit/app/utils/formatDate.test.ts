@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { formatDate } from "../../../app/utils/formatDate"
+import { formatDate } from "../../../../app/utils/formatDate"
 
 describe("formatDate", () => {
   it("Date オブジェクトを YYYY-MM-DD HH:mm:ss 形式にフォーマットする", () => {
