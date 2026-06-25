@@ -1,8 +1,9 @@
-import { articleRepository } from "../../repository/article.repository"
+import { db } from "../../db"
+import { generateArticleRepository } from "../../repository/article.repository"
 import { generateArticleService } from "../../service/article/service"
 import { bodySchema } from "./schema/body-schema"
 
-const articleService = generateArticleService(articleRepository)
+const articleService = generateArticleService(generateArticleRepository(db))
 
 export default defineEventHandler(async (event) => {
   try {
