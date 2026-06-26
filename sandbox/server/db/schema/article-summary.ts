@@ -2,14 +2,27 @@ import { sql } from "drizzle-orm"
 import { check, integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 import { article } from "./article"
 
+export const articleSummaryStatus = {
+  pending: "pending",
+  processing: "processing",
+  completed: "completed",
+  failed: "failed"
+} as const
+
 export const articleSummaryStatuses = [
-  "pending",
-  "processing",
-  "completed",
-  "failed"
+  articleSummaryStatus.pending,
+  articleSummaryStatus.processing,
+  articleSummaryStatus.completed,
+  articleSummaryStatus.failed
 ] as const
 
 export type ArticleSummaryStatus = (typeof articleSummaryStatuses)[number]
+
+const articleSummaryStatusCheckValues = articleSummaryStatuses
+  .map((status) => {
+    return `'${status}'`
+  })
+  .join(", ")
 
 export const articleSummary = sqliteTable(
   "article_summary",
@@ -28,7 +41,7 @@ export const articleSummary = sqliteTable(
     summary: text("summary"),
     status: text("status", { enum: articleSummaryStatuses })
       .notNull()
-      .default("pending"),
+      .default(articleSummaryStatus.pending),
     error: text("error"),
     summarizedAt: integer("summarized_at", { mode: "timestamp" }),
     createdAt: integer("created_at", { mode: "timestamp" })
@@ -42,7 +55,7 @@ export const articleSummary = sqliteTable(
     return [
       check(
         "article_summary_status_check",
-        sql`${table.status} in ('pending', 'processing', 'completed', 'failed')`
+        sql`${table.status} in (${sql.raw(articleSummaryStatusCheckValues)})`
       )
     ]
   }

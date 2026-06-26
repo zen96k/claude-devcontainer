@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const bodySchema = z.object({
+export const requestBodySchema = z.object({
   where: z
     .array(
       z.object({

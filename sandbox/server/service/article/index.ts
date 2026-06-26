@@ -1,17 +1,11 @@
 import type { SQL } from "drizzle-orm"
-import type {
-  Article,
-  Publisher,
-  ReadOption
-} from "../../repository/article"
+import type { Article, Publisher, ReadOption } from "../../repository/article"
 import {
   type GetArticlesOption,
   type WhereCondition,
   buildOrderSQL,
   buildWhereSQL
 } from "./query-builder"
-
-export type { GetArticlesOption, WhereCondition }
 
 export type ArticleRepository = {
   readArticles(option?: ReadOption): Promise<Article[]>
