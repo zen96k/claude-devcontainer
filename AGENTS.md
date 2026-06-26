@@ -61,6 +61,9 @@ npx tsx server/db/seed/index.ts
 
 # RSSフィードから記事を取得してupsert（CIで1日2回実行）
 npx tsx server/batch/create-article.ts
+
+# 記事を要約してDBに保存（手動実行）
+npx tsx server/batch/summarize-article/index.ts
 ```
 
 ## 環境変数
@@ -73,6 +76,7 @@ cp default.env .env
 
 - ローカル SQLite: `DB_FILE_NAME=file:sqlite.db`
 - Turso: 認証情報を含む `libsql://` URL
+- `GEMINI_API_KEY`: 記事要約バッチ（`summarize-article`）で Gemini API を呼び出すために必要
 
 `.env` や認証トークンなどの秘密情報はコミットしたり、ドキュメント・ログ・テストコードへ転記したりしないでください。
 
@@ -85,20 +89,25 @@ Nuxt 4 + Nitro アプリです。UI は Nuxt UI と Tailwind CSS v4 を使いま
 ```text
 RSSフィード -> batch/create-article.ts -> SQLite/Turso
                                               |
-                                              v
-フロントエンド (app/pages/) -> POST /api/article/fetch -> articleService -> articleRepository -> DB
+                              +--------------+---------------+
+                              |                              |
+                              v                              v
+batch/summarize-article/  (Gemini API)         フロントエンド (app/pages/)
+-> articleSummary テーブル更新                  -> POST /api/article/fetch
+                                               -> articleService -> articleRepository -> DB
 ```
 
 ### サーバー層 (`server/`)
 
 - `db/index.ts`: `DB_FILE_NAME` を使って Drizzle の libSQL 接続を初期化する
-- `db/schema/`: Drizzle のテーブル定義（`publisher`、`article`）とリレーション
+- `db/schema/`: Drizzle のテーブル定義（`publisher`、`article`、`articleSummary`）とリレーション
 - `repository/article/index.ts`: 生の DB クエリ。`generateArticleRepository({ db })` で生成するファクトリ関数パターン
+- `repository/article/query-builder.ts`: JSON のフィルター・ソート条件を Drizzle の `SQL` フラグメントに変換する。フィルターは `publisherName`、ソートは `publishedAt` / `title` / `author` のホワイトリストで制限する
 - `service/article/index.ts`: 薄いオーケストレーション層。`generateArticleService({ repository })` で生成し、`ArticleRepository` インターフェースに依存するためテスト時に差し替え可能
-- `service/article/query-builder.ts`: JSON のフィルター・ソート条件を Drizzle の `SQL` フラグメントに変換する。フィルターは `publisherName`、ソートは `publishedAt` / `title` / `author` のホワイトリストで制限する
-- `api/article/schema/body-schema.ts`: `where` / `orderBy` / `limit` / `offset` を検証する Zod スキーマ
+- `api/article/schema/request-body-schema.ts`: `where` / `orderBy` / `limit` / `offset` を検証する Zod スキーマ
 - `api/article/fetch.post.ts`: `readValidatedBody` でリクエストを検証し、記事・件数・publisher を並列取得して `{ articles, total, publishers }` を返す。サービス層の失敗は HTTP 500 に変換する
 - `batch/create-article.ts`: 全 publisher の RSS フィードを取得して記事を upsert するスクリプト
+- `batch/summarize-article/`: Gemini API（gemini-2.5-flash）で記事本文を要約するバッチ。`index.ts` がエントリーポイントで、`service.ts` / `repository.ts` / `gemini.ts` / `scraper.ts` に分割されている。未要約・失敗・タイムアウトした記事を最大 20 件処理し、本文ハッシュが変わっていない場合はスキップする
 
 ### フロントエンド (`app/`)
 
