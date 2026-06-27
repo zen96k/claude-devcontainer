@@ -9,7 +9,6 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 
 cd ${PROJECT_DIRNAME}
 
-rm -rf volume
 mkdir -p volume/.claude
 mkdir -p volume/.codex
 

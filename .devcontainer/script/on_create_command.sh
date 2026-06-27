@@ -10,8 +10,11 @@ PROJECT_DIRNAME=$(cd ${SCRIPT_DIRNAME}/../.. && pwd)
 cd ${PROJECT_DIRNAME}
 
 cp -rfv .zshrc ${HOME}/.zshrc
-ln -s ${PROJECT_DIRNAME}/.credentials.json ${HOME}/.claude/.credentials.json
-ln -s ${PROJECT_DIRNAME}/auth.json ${HOME}/.codex/auth.json
+
+rm -rf ${HOME}/.claude/*
+ln -sf ${PROJECT_DIRNAME}/.credentials.json ${HOME}/.claude/.credentials.json
+rm -rf ${HOME}/.codex/*
+ln -sf ${PROJECT_DIRNAME}/auth.json ${HOME}/.codex/auth.json
 
 mise use -g node
 npm install -g @anthropic-ai/claude-code
