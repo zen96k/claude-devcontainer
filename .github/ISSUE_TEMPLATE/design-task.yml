@@ -1,0 +1,53 @@
+name: 設計タスク
+description: 機能要望を受けて、実装前の設計作業を管理するためのテンプレート
+title: "[Design]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        このフォームは、機能要望に対する設計作業を Sub Issue として管理するためのものです。
+        親 Issue の「Create sub-issue」から作成し、親子関係が設定されていることを確認してください。
+
+  - type: textarea
+    id: requirements
+    attributes:
+      label: 要件
+      description: この設計で満たすべき機能要件・非機能要件を記載してください。
+      placeholder: |
+        - 〇〇できること
+        - 〇〇しないこと（スコープ外）
+    validations:
+      required: true
+
+  - type: textarea
+    id: data_design
+    attributes:
+      label: データ設計
+      description: DBスキーマ、テーブル定義、リレーションなどを記載してください。
+      placeholder: |
+        - テーブル名: カラム定義
+        - 既存スキーマへの影響
+    validations:
+      required: false
+
+  - type: textarea
+    id: flow_design
+    attributes:
+      label: フロー設計
+      description: データフロー、処理フロー、API設計などを記載してください。
+      placeholder: |
+        - リクエスト -> サービス -> リポジトリ -> DB
+        - バッチ処理の流れ
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 補足
+      description: 制約条件、参考資料、懸念事項などがあれば記載してください。
+      placeholder: |
+        - 〇〇の場合にパフォーマンス問題が起きる可能性がある
+        - 〇〇の仕様が未確定
+    validations:
+      required: false

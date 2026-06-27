@@ -1,0 +1,36 @@
+name: 実装タスク
+description: 設計済みの内容をもとに、実装・テストの作業を管理するためのテンプレート
+title: "[Implement]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        このフォームは、設計タスクや機能要望を受けた実装作業・テスト作業を Sub Issue として管理するためのものです。
+        親 Issue の「Create sub-issue」から作成し、親子関係が設定されていることを確認してください。
+
+  - type: textarea
+    id: tasks
+    attributes:
+      label: 作業内容
+      description: 実装・テストとして実施する内容をチェックリストで記載してください。
+      placeholder: |
+        - [ ] Zod スキーマにキーワードフィールドを追加する
+        - [ ] クエリビルダーに全文検索の条件を追加する
+        - [ ] サービス層のインターフェースを更新する
+        - [ ] フロントエンドの composable を更新する
+        - [ ] ユニットテストを追加・更新する
+        - [ ] 動作確認する
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: 完了条件
+      description: このタスクを完了と判断できる、検証可能な条件を記載してください。
+      placeholder: |
+        - [ ] キーワードで記事を絞り込める
+        - [ ] 関連するすべてのテストが通る
+        - [ ] lint・型チェックがエラーなく通る
+    validations:
+      required: true
