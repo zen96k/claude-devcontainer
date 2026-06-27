@@ -1,9 +1,8 @@
 import type { Article, Publisher, ReadOption } from "../../repository/article"
-import type { WhereCondition } from "../../repository/article/query-builder"
 
 export type ArticleRepository = {
   readArticles(option?: ReadOption): Promise<Article[]>
-  countArticles(option?: { where?: WhereCondition[] }): Promise<number>
+  countArticles(option?: ReadOption): Promise<number>
   readPublishers(): Promise<Publisher[]>
 }
 
@@ -17,10 +16,8 @@ export const generateArticleService = ({
       return await repository.readArticles(option)
     },
 
-    countArticles: async ({
-      where
-    }: { where?: WhereCondition[] } = {}): Promise<number> => {
-      return await repository.countArticles({ where })
+    countArticles: async (option?: ReadOption): Promise<number> => {
+      return await repository.countArticles(option)
     },
 
     readPublishers: async (): Promise<Publisher[]> => {

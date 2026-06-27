@@ -27,6 +27,22 @@ describe("requestBodySchema", () => {
     }).toThrow()
   })
 
+  test("where.column が不明なカラムのとき拒否する", () => {
+    expect(() => {
+      return requestBodySchema.parse({
+        where: [{ column: "unknown", operator: "eq", value: "x" }]
+      })
+    }).toThrow()
+  })
+
+  test("orderBy.column が不明なカラムのとき拒否する", () => {
+    expect(() => {
+      return requestBodySchema.parse({
+        orderBy: [{ column: "unknown", direction: "asc" }]
+      })
+    }).toThrow()
+  })
+
   test("operator が eq 以外のとき拒否する", () => {
     expect(() => {
       return requestBodySchema.parse({

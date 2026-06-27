@@ -15,14 +15,6 @@ describe("buildWhereSQL", () => {
     expect(buildWhereSQL({ conditions: [] })).toBeUndefined()
   })
 
-  test("サポートされていないカラムのみの場合はundefinedを返す", () => {
-    expect(
-      buildWhereSQL({
-        conditions: [{ column: "unknown", operator: "eq", value: "x" }]
-      })
-    ).toBeUndefined()
-  })
-
   test("サポートされているカラムのeq式を生成する", () => {
     const result = buildWhereSQL({
       conditions: [
@@ -32,26 +24,11 @@ describe("buildWhereSQL", () => {
     expect(result).toEqual(eq(publisher.name, "Example Publisher"))
   })
 
-  test("サポートされていないカラムを無視してサポートされているカラムのみ使用する", () => {
-    const result = buildWhereSQL({
-      conditions: [
-        { column: "unknown", operator: "eq", value: "ignored" },
-        { column: "publisherName", operator: "eq", value: "Example Publisher" }
-      ]
-    })
-    expect(result).toEqual(eq(publisher.name, "Example Publisher"))
-  })
 })
 
 describe("buildOrderSQL", () => {
   test("orderByが指定されていない場合はundefinedを返す", () => {
     expect(buildOrderSQL({})).toBeUndefined()
-  })
-
-  test("サポートされていないカラムの場合はundefinedを返す", () => {
-    expect(
-      buildOrderSQL({ orderBy: [{ column: "unknown", direction: "asc" }] })
-    ).toBeUndefined()
   })
 
   test("サポートされているカラムのasc式を生成する", () => {
@@ -77,14 +54,4 @@ describe("buildOrderSQL", () => {
     ).toEqual([desc(article.publishedAt), asc(article.title)])
   })
 
-  test("サポートされていないカラムを無視してサポートされているカラムのみ使用する", () => {
-    expect(
-      buildOrderSQL({
-        orderBy: [
-          { column: "unknown", direction: "asc" },
-          { column: "publishedAt", direction: "desc" }
-        ]
-      })
-    ).toEqual([desc(article.publishedAt)])
-  })
 })

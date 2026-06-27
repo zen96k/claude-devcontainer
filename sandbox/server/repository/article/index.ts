@@ -3,6 +3,7 @@ import type { LibSQLDatabase } from "drizzle-orm/libsql"
 import type * as schema from "../../db/schema"
 import { article, publisher } from "../../db/schema"
 import {
+  type OrderByCondition,
   type WhereCondition,
   buildOrderSQL,
   buildWhereSQL
@@ -21,7 +22,7 @@ export type Publisher = { id: number; name: string }
 
 export type ReadOption = {
   where?: WhereCondition[]
-  orderBy?: { column: string; direction: "asc" | "desc" }[]
+  orderBy?: OrderByCondition[]
   limit?: number
   offset?: number
 }
@@ -70,9 +71,7 @@ export const generateArticleRepository = ({
       return await query
     },
 
-    countArticles: async ({
-      where
-    }: { where?: WhereCondition[] } = {}): Promise<number> => {
+    countArticles: async ({ where }: ReadOption = {}): Promise<number> => {
       let query = db
         .select({ count: count() })
         .from(article)
