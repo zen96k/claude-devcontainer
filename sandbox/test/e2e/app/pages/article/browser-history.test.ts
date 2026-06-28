@@ -112,7 +112,7 @@ describe("記事一覧 - ブラウザ履歴", () => {
     expect(page.url()).toContain("page=3")
   })
 
-  test("URL 直接アクセスが正しく表示される", async () => {
+  test("URL直接アクセスが正しく表示される", async () => {
     page = await createMockedPage()
     await page.goto(url("/article?page=2&publisher=Zenn"))
     await page.waitForLoadState("networkidle")
