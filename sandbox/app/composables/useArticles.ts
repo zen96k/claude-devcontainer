@@ -7,42 +7,41 @@ export const useArticles = async ({
 }) => {
   const route = useRoute()
   const router = useRouter()
-  const page = ref(Number(route.query.page) || 1)
 
-  const selectedPublisher = ref<string | null>(
-    (route.query.publisher as string) || null
-  )
+  const _page = ref(Number(route.query.page) || 1)
 
   watch(
     () => {
       return route.query.page
     },
     (value) => {
-      page.value = Number(value) || 1
+      _page.value = Number(value) || 1
     }
   )
 
-  watch(
-    () => {
-      return route.query.publisher
+  const page = computed({
+    get: () => {
+      return _page.value
     },
-    (value) => {
-      selectedPublisher.value = (value as string) || null
+    set: (value: number) => {
+      _page.value = value
+      router.push({
+        query: {
+          page: value === 1 ? undefined : value,
+          publisher: (route.query.publisher as string) || undefined
+        }
+      })
     }
-  )
-
-  watch(page, (value) => {
-    router.replace({
-      query: {
-        page: value === 1 ? undefined : value,
-        publisher: selectedPublisher.value ?? undefined
-      }
-    })
   })
 
-  watch(selectedPublisher, (value) => {
-    page.value = 1
-    router.replace({ query: { publisher: value ?? undefined } })
+  const selectedPublisher = computed({
+    get: () => {
+      return (route.query.publisher as string) || null
+    },
+    set: (value: string | null) => {
+      _page.value = 1
+      router.push({ query: { publisher: value ?? undefined } })
+    }
   })
 
   const { data, status } = await useFetch("/api/article/fetch", {
@@ -75,12 +74,5 @@ export const useArticles = async ({
     return data.value?.publishers ?? []
   })
 
-  return {
-    selectedPublisher,
-    page,
-    total,
-    articles,
-    publishers,
-    status
-  }
+  return { selectedPublisher, page, total, articles, publishers, status }
 }

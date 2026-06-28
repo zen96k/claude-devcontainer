@@ -170,9 +170,9 @@ describe("useArticles", () => {
     expect(page.value).toBe(1)
   })
 
-  test("selectedPublisher が変わると router.replace に publisher が渡される", async () => {
+  test("selectedPublisher が変わると router.push に publisher が渡される", async () => {
     const router = useRouter()
-    const replaceSpy = vi.spyOn(router, "replace")
+    const pushSpy = vi.spyOn(router, "push")
     const { selectedPublisher } = await useArticles({
       articleLimit: readonly(ref(10))
     })
@@ -180,7 +180,7 @@ describe("useArticles", () => {
     selectedPublisher.value = "Zenn"
     await nextTick()
 
-    expect(replaceSpy).toHaveBeenCalledWith({ query: { publisher: "Zenn" } })
+    expect(pushSpy).toHaveBeenCalledWith({ query: { publisher: "Zenn" } })
   })
 
   // useFetch のリクエストボディ
